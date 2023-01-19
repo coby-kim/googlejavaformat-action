@@ -191,7 +191,6 @@ async function run() {
                 const diffIndex = await execute('git diff-index --quiet HEAD', { ignoreReturnCode: true, silent: true });
                 if (diffIndex.exitCode !== 0) {
                     await execute(`git commit --all -m "${commitMessage ? commitMessage : 'Google Java Format'}"`);
-                    await push();
                     await execute(`git reset HEAD~1`);
                     await execute(`LAST_COMMIT_MESSAGE=$(git log --pretty=format:"%s" -1)`);
                     await execute(`LAST_COMMIT_USER_NAME=$(git log --pretty=format:"%an" -1)`);
