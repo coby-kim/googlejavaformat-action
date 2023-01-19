@@ -14286,11 +14286,11 @@ async function getReleaseId() {
 }
 
 async function push() {
-    if (!githubToken) await execute('git push');
+    if (!githubToken) await execute('git push -f');
     else {
         const env = process.env;
         const remote = `https://${env.GITHUB_ACTOR}:${githubToken}@github.com/${env.GITHUB_REPOSITORY}.git`;
-        await execute(`git push ${remote}`);
+        await execute(`git push -f ${remote}`);
     }
 }
 
@@ -14335,7 +14335,8 @@ async function run() {
                     await execute(`git config user.name ${lastCommitUserName}`, { silent: true });
                     await execute(`git config user.email ${lastCommitUserEmail}`, { silent: true });
                     await execute(`git reset HEAD~1`);
-                    await execute(`git commit --all -m "${lastCommitMessage}[skip ci]"`);
+                    await execute(`git commit --all -m "${lastCommitMessage} [skip ci]"`);
+                    await push();
                 } else core.info('Nothing to commit!')
             });
         }
