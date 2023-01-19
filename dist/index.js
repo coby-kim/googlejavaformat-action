@@ -14335,6 +14335,7 @@ async function run() {
                     await execute(`git config user.name ${lastCommitUserName}`, { silent: true });
                     await execute(`git config user.email ${lastCommitUserEmail}`, { silent: true });
                     await execute(`git reset HEAD~1`);
+                    await execute(`git add .`);
                     await execute(`git commit --all -m "${lastCommitMessage} [skip ci]"`);
                     await push();
                 } else core.info('Nothing to commit!')
