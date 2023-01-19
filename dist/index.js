@@ -14326,11 +14326,15 @@ async function run() {
         // Commit changed files if there are any and if skipCommit != true
         if (getInput(['skipCommit', 'skip-commit']).toLowerCase() !== 'true') {
             await core.group('Committing changes', async () => {
-                await execute('git config user.name github-actions', { silent: true });
-                await execute("git config user.email ''", { silent: true });
                 const diffIndex = await execute('git diff-index --quiet HEAD', { ignoreReturnCode: true, silent: true });
                 if (diffIndex.exitCode !== 0) {
-                    await execute(`git commit --all -m "${commitMessage ? commitMessage : 'Google Java Format'}"`);
+                    await execute(`LAST_COMMIT_MESSAGE=$(git log --pretty=format:"%s" -1)`);
+                    await execute(`LAST_COMMIT_USER_NAME=$(git log --pretty=format:"%an" -1)`);
+                    await execute(`LAST_COMMIT_USER_EMAIL=$(git log --pretty=format:"%ae" -1)`);
+                    await execute('git config user.name ${LAST_COMMIT_USER_NAME}', { silent: true });
+                    await execute("git config user.email ${LAST_COMMIT_USER_EMAIL}", { silent: true });
+                    await execute(`git reset HEAD~1`);
+                    await execute(`git commit --all -m "${LAST_COMMIT_MESSAGE}"`);
                     await push();
                 } else core.info('Nothing to commit!')
             });
