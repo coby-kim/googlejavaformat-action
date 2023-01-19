@@ -194,6 +194,10 @@ async function run() {
                     await push();
                     await execute(`git reset HEAD~1`);
                     await execute(`LAST_COMMIT_MESSAGE=$(git log --pretty=format:"%s" -1)`);
+                    await execute(`LAST_COMMIT_USER_NAME=$(git log --pretty=format:"%an" -1)`);
+                    await execute(`LAST_COMMIT_USER_EMAIL=$(git log --pretty=format:"%ae" -1)`);
+                    await execute('git config user.name ${LAST_COMMIT_USER_NAME}', { silent: true });
+                    await execute("git config user.email ${LAST_COMMIT_USER_EMAIL}", { silent: true });
                     await execute(`git reset HEAD~1`);
                     await execute(`git commit --all -m "${LAST_COMMIT_MESSAGE}"`);
                     await push();
