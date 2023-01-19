@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const glob = require('@actions/glob');
+const { execSync } = require('child_process');
 const github = require('@actions/github');
 const path = require('path');
 
@@ -188,13 +189,13 @@ async function run() {
             await core.group('Committing changes', async () => {
                 const diffIndex = await execute('git diff-index --quiet HEAD', { ignoreReturnCode: true, silent: true });
                 if (diffIndex.exitCode !== 0) {
-                    await execute(`export LAST_COMMIT_MESSAGE=$(git log --pretty=format:"%s" -1)`);
-                    await execute(`export LAST_COMMIT_USER_NAME=$(git log --pretty=format:"%an" -1)`);
-                    await execute(`export LAST_COMMIT_USER_EMAIL=$(git log --pretty=format:"%ae" -1)`);
-                    await execute('git config user.name ${LAST_COMMIT_USER_NAME}', { silent: true });
-                    await execute("git config user.email ${LAST_COMMIT_USER_EMAIL}", { silent: true });
+                    const lastCommitMessage = execSync('git log --pretty=format:"%s" -1').toString().trim();
+                    const lastCommitUserName = execSync('git log --pretty=format:"%an" -1').toString().trim();
+                    const lastCommitUserEmail = execSync('git log --pretty=format:"%ae" -1').toString().trim();
+                    await execute(`git config user.name ${lastCommitUserName}`, { silent: true });
+                    await execute(`git config user.email ${lastCommitUserEmail}`, { silent: true });
                     await execute(`git reset HEAD~1`);
-                    await execute(`git commit --all -m "${LAST_COMMIT_MESSAGE}"`);
+                    await execute(`git commit --all -m "${lastCommitMessage}"`);
                 } else core.info('Nothing to commit!')
             });
         }
