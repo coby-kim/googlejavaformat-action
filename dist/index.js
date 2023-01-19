@@ -14141,6 +14141,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const exec = __nccwpck_require__(1514);
 const glob = __nccwpck_require__(8090);
+const { execSync } = __nccwpck_require__(3129);
 const github = __nccwpck_require__(5438);
 const path = __nccwpck_require__(5622);
 
@@ -14335,7 +14336,6 @@ async function run() {
                     await execute(`git config user.email ${lastCommitUserEmail}`, { silent: true });
                     await execute(`git reset HEAD~1`);
                     await execute(`git commit --all -m "${lastCommitMessage}"`);
-                    await push();
                 } else core.info('Nothing to commit!')
             });
         }
