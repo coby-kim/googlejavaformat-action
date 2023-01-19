@@ -192,6 +192,11 @@ async function run() {
                 if (diffIndex.exitCode !== 0) {
                     await execute(`git commit --all -m "${commitMessage ? commitMessage : 'Google Java Format'}"`);
                     await push();
+                    await execute(`git reset HEAD~1`);
+                    await execute(`LAST_COMMIT_MESSAGE=$(git log --pretty=format:"%s" -1)`);
+                    await execute(`git reset HEAD~1`);
+                    await execute(`git commit --all -m "${LAST_COMMIT_MESSAGE}"`);
+                    await push();
                 } else core.info('Nothing to commit!')
             });
         }
