@@ -14330,13 +14330,14 @@ async function run() {
                 const diffIndex = await execute('git diff-index --quiet HEAD', { ignoreReturnCode: true, silent: true });
                 if (diffIndex.exitCode !== 0) {
                     const lastCommitMessage = execSync('git log --pretty=format:"%s" -1').toString().trim();
+                    const firstColonIndex = lastCommitMessage.indexOf(":");
+                    const lastCommitPrefix = str.substring(0, firstColonIndex+1);
                     const lastCommitUserName = execSync('git log --pretty=format:"%an" -1').toString().trim();
                     const lastCommitUserEmail = execSync('git log --pretty=format:"%ae" -1').toString().trim();
                     await execute(`git config user.name ${lastCommitUserName}`, { silent: true });
                     await execute(`git config user.email ${lastCommitUserEmail}`, { silent: true });
-                    await execute(`git reset HEAD~1`);
                     await execute(`git add .`);
-                    await execute(`git commit --all -m "${lastCommitMessage} [skip ci]"`);
+                    await execute(`git commit --all -m "${lastCommitPrefix} AOSP 자바 포맷팅 적용 [skip ci]"`);
                     await push();
                 } else core.info('Nothing to commit!')
             });
