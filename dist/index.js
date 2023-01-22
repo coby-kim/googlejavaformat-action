@@ -14286,11 +14286,11 @@ async function getReleaseId() {
 }
 
 async function push() {
-    if (!githubToken) await execute('git push -f');
+    if (!githubToken) await execute('git push');
     else {
         const env = process.env;
         const remote = `https://${env.GITHUB_ACTOR}:${githubToken}@github.com/${env.GITHUB_REPOSITORY}.git`;
-        await execute(`git push -f ${remote}`);
+        await execute(`git push ${remote}`);
     }
 }
 
