@@ -14331,7 +14331,7 @@ async function run() {
                 if (diffIndex.exitCode !== 0) {
                     const lastCommitMessage = execSync('git log --pretty=format:"%s" -1').toString().trim();
                     const firstColonIndex = lastCommitMessage.indexOf(":");
-                    const lastCommitPrefix = str.substring(0, firstColonIndex+1);
+                    const lastCommitPrefix = lastCommitMessage.substring(0, firstColonIndex+1);
                     const lastCommitUserName = "aswemake-github-action"
                     const lastCommitUserEmail = "aswemake.inc@gmail.com"
                     await execute(`git config user.name ${lastCommitUserName}`, { silent: true });
