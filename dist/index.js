@@ -14337,7 +14337,7 @@ async function run() {
                     await execute(`git config user.name ${lastCommitUserName}`, { silent: true });
                     await execute(`git config user.email ${lastCommitUserEmail}`, { silent: true });
                     await execute(`git add .`);
-                    await execute(`git commit --all -m "${lastCommitPrefix} AOSP 자바 포맷팅 적용"`);
+                    await execute(`git commit --all -m "${lastCommitPrefix} Google 자바 포맷팅 적용"`);
                     await push();
                 } else core.info('Nothing to commit!')
             });
